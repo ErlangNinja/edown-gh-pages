@@ -26,15 +26,19 @@ var edown_gh_pages = function (options) {
             marked(markdown, function (err, content) {
                 if (err) throw err
                 $(opts.content_id).html(content);
-                var element = $(opts.content_id).get();
-                $('pre code', element).each(function(i, block) {
-                    if (block.className.indexOf("lang-") < 0) {
-                        $(block).addClass("lang-erlang");
-                    }
-                });
-                opts.on_load(element);
+                contentLoaded();
             });
         });
+    }
+    
+    function contentLoaded() {
+        var element = $(opts.content_id).get();
+        $('pre code', element).each(function(i, block) {
+            if (block.className.indexOf("lang-") < 0) {
+                $(block).addClass("lang-erlang");
+            }
+        });
+        opts.on_load(element);
     }
 
     function extractModules() {
@@ -52,6 +56,7 @@ var edown_gh_pages = function (options) {
                 if (err) throw err;
                 $(opts.sidebar_id).append("<li><strong><a href=\"#!" + opts.base_url + opts.start_page + "\">Home</a></strong></li>");
                 $(opts.content_id).html(html);
+                contentLoaded();
                 document.title = $(opts.content_id).find("h1").text();
                 extractModules();
                 $(window).on("hashchange", hashChange);
